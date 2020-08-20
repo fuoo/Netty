@@ -22,12 +22,13 @@ public class GroupChatClient {
         GroupChatClient chatClient = new GroupChatClient();
         //启动一个线程, 每个 3 秒，读取从服务器发送数据
         new Thread() {
+            @Override
             public void run() {
                 while (true) {
                     chatClient.readInfo();
                     try {
-                        Thread.currentThread().sleep(3000);
-                    }catch (InterruptedException e) {
+                        Thread.sleep(3000);
+                    } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                 }

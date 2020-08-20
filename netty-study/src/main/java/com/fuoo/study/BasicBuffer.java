@@ -13,7 +13,6 @@ public class BasicBuffer {
         intBuffer.flip();
 
         while (intBuffer.hasRemaining()) {
-
             intBuffer.mark();
             System.out.println(intBuffer.position());
             System.out.println(intBuffer.get());
