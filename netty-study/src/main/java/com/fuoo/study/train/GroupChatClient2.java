@@ -9,19 +9,19 @@ import java.nio.channels.SocketChannel;
 import java.util.Iterator;
 import java.util.Scanner;
 
-public class GroupChatClient {
+public class GroupChatClient2 {
     private Selector selector;
     private SocketChannel socketChannel;
     private static final String host = "127.0.0.1";
     private static final int PORT = 6666;
 
     public static void main(String[] args) throws Exception {
-        GroupChatClient groupChatClient = new GroupChatClient();
+        GroupChatClient2 groupChatClient = new GroupChatClient2();
         groupChatClient.lisent();
         groupChatClient.write();
     }
 
-    public GroupChatClient() {
+    public GroupChatClient2() {
         try {
             selector = Selector.open();
             socketChannel = SocketChannel.open(new InetSocketAddress(host,PORT));
