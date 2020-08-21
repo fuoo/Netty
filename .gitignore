@@ -1,3 +1,5 @@
 netty-study/.idea/
 *.class
 netty-study/target/
+.idea/
+netty-study.iml
