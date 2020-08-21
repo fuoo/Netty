@@ -1,4 +1,4 @@
-package com.fuoo.study;
+package com.fuoo.study.learn;
 
 
 import java.io.IOException;
@@ -79,7 +79,7 @@ public class GroupChatServer {
         }
     }
 
-    private void readData(SelectionKey key) {  
+    private void readData(SelectionKey key) {
         //取到关联的 channle
         SocketChannel channel = null;
         try {
@@ -105,7 +105,7 @@ public class GroupChatServer {
                 //关闭通道
                 channel.close();
             }catch (IOException e2) {
-                e2.printStackTrace();;
+                e2.printStackTrace();
             }
         }
     }

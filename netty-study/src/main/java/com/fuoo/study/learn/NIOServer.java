@@ -1,4 +1,4 @@
-package com.fuoo.study;
+package com.fuoo.study.learn;
 
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
