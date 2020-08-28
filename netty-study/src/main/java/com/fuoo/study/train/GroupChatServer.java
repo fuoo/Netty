@@ -59,6 +59,13 @@ public class GroupChatServer {
         }
     }
 
+    /**
+    　* @description:
+    　* @param: [selectionKey, msg]
+    　* @return: void
+    　* @author: fuoo
+    　* @date: 2020/8/24 16:32
+    　*/
     public void informUser(SelectionKey selectionKey, String msg) {
         Set<SelectionKey> keys = selector.keys();
         keys.forEach(key -> {

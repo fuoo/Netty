@@ -23,7 +23,7 @@ public class NettyClient {
                     .handler(new ChannelInitializer() {
                         @Override
                         protected void initChannel(Channel channel) throws Exception {
-                            channel.pipeline().addLast(new NettyServerHandler()); //加入自己的处理器
+                            channel.pipeline().addLast(new NettyClientHandler()); //加入自己的处理器
                         }
                     });
             System.out.println("客户端 ok......");
