@@ -5,6 +5,8 @@ import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.string.StringDecoder;
+import io.netty.handler.codec.string.StringEncoder;
 
 import java.util.Scanner;
 
@@ -16,54 +18,50 @@ import java.util.Scanner;
  * @date 2020/9/216:58
  */
 public class NettyClient {
-    private int port;
-    private String ip;
+    //属性
+    private final String host;
+    private final int port;
 
-    public NettyClient(int port, String ip) {
-        this.ip = ip;
+    public NettyClient(String host, int port) {
+        this.host = host;
         this.port = port;
     }
 
-    public void run() {
-        EventLoopGroup loopGroup = new NioEventLoopGroup();
-        Bootstrap bootstrap = new Bootstrap();
-
-        bootstrap.group(loopGroup)
-                .channel(NioSocketChannel.class)
-                .handler(new SimpleChannelInboundHandler<SocketChannel>() {
-                    @Override
-                    protected void channelRead0(ChannelHandlerContext channelHandlerContext, SocketChannel socketChannel) throws Exception {
-                        //得到 pipeline
-                        ChannelPipeline pipeline = channelHandlerContext.pipeline();
-                        //加入相关 handler
-
-                        //加入自定义的 handler
-                        pipeline.addLast(null);
-
-                    }
-                });
-
-            try {
-                ChannelFuture channelFuture = bootstrap.connect(ip, port).sync();
-                //得到 channel
-                Channel channel = channelFuture.channel();
-                System.out.println("-------" + channel.localAddress()+ "--------");
-                //客户端需要输入信息，创建一个扫描器
-                Scanner scanner = new Scanner(System.in);
-                while (scanner.hasNextLine()) {
-                    String msg = scanner.nextLine();
-                    //通过 channel 发送到服务器端
-                    channel.writeAndFlush(msg + "\r\n");
-                }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } finally {
-                loopGroup.shutdownGracefully();
+    public void run() throws Exception{
+        EventLoopGroup group = new NioEventLoopGroup();
+        try {
+            Bootstrap bootstrap = new Bootstrap()
+                    .group(group)
+                    .channel(NioSocketChannel.class)
+                    .handler(new ChannelInitializer<SocketChannel>() {
+                        @Override
+                        protected void initChannel(SocketChannel ch) throws Exception {
+//得到 pipeline
+                            ChannelPipeline pipeline = ch.pipeline();
+//加入相关 handler
+                            pipeline.addLast("decoder", new StringDecoder());
+                            pipeline.addLast("encoder", new StringEncoder());
+//加入自定义的 handler
+                            pipeline.addLast(new ClientHandler());
+                        }
+                    });
+            ChannelFuture channelFuture = bootstrap.connect(host, port).sync();
+//得到 channel
+            Channel channel = channelFuture.channel();
+            System.out.println("-------" + channel.localAddress()+ "--------");
+//客户端需要输入信息，创建一个扫描器
+            Scanner scanner = new Scanner(System.in);
+            while (scanner.hasNextLine()) {
+                String msg = scanner.nextLine();
+//通过 channel 发送到服务器端
+                channel.writeAndFlush(msg + "\r\n");
             }
+        }finally {
+            group.shutdownGracefully();
+        }
     }
-
-
     public static void main(String[] args) throws Exception {
-        new NettyClient(55551, "127.0.0.1").run();
+        new NettyClient("127.0.0.1", 7000).run();
     }
+
 }
